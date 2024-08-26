@@ -1,0 +1,50 @@
+DROP EXTERNAL TABLE ActivityLog;
+DROP EXTERNAL TABLE ActivityLog1;
+DROP EXTERNAL TABLE ActivityLog2
+DROP EXTERNAL TABLE ActivityLog9;
+DROP EXTERNAL DATA SOURCE srcActivityLog9;
+DROP EXTERNAL DATA SOURCE srcActivityLog;
+DROP EXTERNAL DATA SOURCE srcActivityLog1;
+DROP EXTERNAL DATA SOURCE srcActivityLog2;
+
+CREATE MASTER KEY ENCRYPTION BY PASSWORD='P@ssword@123'
+
+CREATE DATABASE SCOPED CREDENTIAL sasToken
+WITH IDENTITY = 'SHARED ACCESS SIGNATURE',
+SECRET='sv=2022-11-02&ss=b&srt=sco&sp=rl&se=2024-08-26T14:12:35Z&st=2024-08-26T06:12:35Z&spr=https&sig=4NMEkonIvNXw3oe%2Blq30paRGaXK19j5ABZrVYxpglHs%3D'
+
+
+CREATE EXTERNAL DATA SOURCE srcActivityLog
+WITH(
+    LOCATION='https://datalake12ml.blob.core.windows.net/data12ml',
+    CREDENTIAL=sasToken
+);
+
+CREATE EXTERNAL FILE FORMAT parquetFileFormat
+WITH(
+    FORMAT_TYPE=PARQUET,
+    DATA_COMPRESSION='org.apache.hadoop.io.compress.SnappyCodec'
+)
+ CREATE EXTERNAL TABLE ActivityLog(
+        [Corelationid] VARCHAR (200),
+        [Operationname] VARCHAR (300),
+        [Status] VARCHAR (100),
+        [Eventcategory] VARCHAR (100),
+        [Level] VARCHAR (100),
+        [Time] VARCHAR (100),
+        [Subscription] VARCHAR (200),
+        [Eventinitiatedby]VARCHAR (1000),
+        [Resourcetype] varchar (300),
+        [Resourcegroup] VARCHAR (1000),
+        [Resource] VARCHAR (2000)
+)
+
+WITH
+(
+    LOCATION='/ActivityLog01.parquet',
+    DATA_SOURCE=srcActivityLog,
+    FILE_FORMAT=parquetFileFormat
+);
+
+
+SELECT * FROM ActivityLog
