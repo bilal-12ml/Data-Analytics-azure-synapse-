@@ -1,0 +1,26 @@
+SELECT 
+ JSON_VALUE(jsonContent, '$.Correlationid') AS Correlationid,
+ JSON_VALUE(jsonContent, '$.Operationname') AS Operationname,
+ JSON_VALUE(jsonContent,  '$.Status') AS Status,
+ JSON_VALUE(jsonContent, '$.Eventcategory') AS Eventcategory
+
+FROM OPENROWSET 
+(
+    BULK 'https://datalake12ml.blob.core.windows.net/data12ml/ActivityLog-01 (1).json',
+    FORMAT = 'csv',
+    FIELDTERMINATOR='0x0b',
+    FIELDQUOTE='0X0b',
+    ROWTERMINATOR='0X0a'
+    
+
+)
+
+WITH(
+    jsonContent VARCHAR (MAX)
+
+)
+AS ROWS
+
+
+
+these lines of code work in column
