@@ -1,0 +1,39 @@
+CREATE EXTERNAL DATA SOURCE srcActivityLog
+with(
+    LOCATION='https://datalake12ml.blob.core.windows.net/data12ml/ActivityLog-01.csv'
+);
+
+
+CREATE EXTERNAL FILE FORMAT delimitedTextFileFormat
+WITH (
+    FORMAT_TYPE = DELIMITEDTEXT,
+    FORMAT_OPTIONS(
+         FIELD_TERMINATOR =',',
+         FIRST_ROW=2
+    )
+    );
+
+    CREATE EXTERNAL TABLE ActivityLog(
+        [Corelationid] VARCHAR (200),
+        [Operationname] VARCHAR (300),
+        [Status] VARCHAR (100),
+        [Eventcategory] VARCHAR (100),
+        [Level] VARCHAR (100),
+        [Time] VARCHAR (100),
+        [Subscription] VARCHAR (200),
+        [Eventinitiatedby]VARCHAR (1000),
+        [Resourcetype] varchar (300),
+        [Resourcegroup] VARCHAR (1000),
+        [Resource] VARCHAR (2000)
+)
+
+WITH
+(
+    LOCATION='/ActivityLog-01.csv',
+    DATA_SOURCE=srcActivityLog9,
+    FILE_FORMAT=delimitedTextFileFormat
+);
+
+SELECT * FROM ActivityLog9;
+
+
