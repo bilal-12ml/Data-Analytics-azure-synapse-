@@ -1,0 +1,21 @@
+SELECT *
+FROM OPENROWSET
+(
+    BULK 'https://datalake12ml.blob.core.windows.net/data12ml/ActivityLog-01 (1).json',
+    FORMAT = 'csv',
+    FIELDTERMINATOR='0x0b',
+    FIELDQUOTE='0X0b',
+    ROWTERMINATOR='0X0a'
+    
+
+)
+
+WITH(
+    jsonContent VARCHAR (MAX)
+
+)
+AS ROWS
+
+
+
+it works in single row
