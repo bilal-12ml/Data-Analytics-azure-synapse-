@@ -1,0 +1,44 @@
+CREATE MASTER KEY ENCRYPTION BY PASSWORD ='P@ssword@123';
+
+CREATE DATABASE SCOPED CREDENTIAL sasToken
+WITH IDENTITY = 'SHARED ACCESS SIGNATURE',
+SECRET='sv=2022-11-02&ss=b&srt=sco&sp=rl&se=2024-08-27T20:42:00Z&st=2024-08-27T12:42:00Z&spr=https&sig=ByqKxr9I0GN9Hdk0LBo6JIZDllzniPpJk3nItiOtkJE%3D'
+
+CREATE EXTERNAL DATA SOURCE srcActivityLog
+WITH(
+    LOCATION='abfss://data@datalake12m.blob.core.windows.net',
+    TYPE=HADOOP,
+    CREDENTIAL=sasToken
+);
+
+
+CREATE EXTERNAL FILE FORMAT delimitedTextFileFormat
+WITH (
+    FORMAT_TYPE = DELIMITEDTEXT,
+    FORMAT_OPTIONS(
+         FIELD_TERMINATOR =',',
+         FIRST_ROW=2
+    )
+    );
+
+    CREATE EXTERNAL TABLE ActivityLog(
+        [Corelationid] VARCHAR (200),
+        [Operationname] VARCHAR (300),
+        [Status] VARCHAR (100),
+        [Eventcategory] VARCHAR (100),
+        [Level] VARCHAR (100),
+        [Time] VARCHAR (100),
+        [Subscription] VARCHAR (200),
+        [Eventinitiatedby]VARCHAR (1000),
+        [Resourcetype] varchar (300),
+        [Resourcegroup] VARCHAR (1000),
+        [Resource] VARCHAR (2000)
+)
+
+WITH
+(
+    LOCATION='/ActivityLog-01.csv',
+    DATA_SOURCE=srcActivityLog,
+    FILE_FORMAT=delimitedTextFileFormat
+);
+SELECT * FROM ActivityLog;
