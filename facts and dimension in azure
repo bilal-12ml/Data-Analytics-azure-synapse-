@@ -1,0 +1,13 @@
+SELECT 
+
+hd.[SalesOrderID], 
+dt.[OrderQty],dt.[ProductID]
+
+FROM
+[SalesLT].[SalesOrderDetail] hd INNER JOIN [SalesLT].[SalesOrderDetail] dt
+ON hd.[SalesOrderID]=dt.[SalesOrderID];
+
+
+
+
+??/////it is create for quantitative data..
